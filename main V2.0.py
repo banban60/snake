@@ -14,7 +14,7 @@ class Jeu:
         self.serpent_direction_y = 0
         self.serpent_corps = 10
         self.clock = pygame.time.Clock()
-        self.clock_tick = 20
+        self.clock_tick = 25
 
         self.positions_serpent = []
         self.taille_du_serpent = 1
@@ -186,8 +186,12 @@ class Jeu:
                     print(texte)
 
                     self.ecran_du_debut = False
+
                     if texte == "Facile":
                         self.clock_tick = 15
+
+                    if texte == "Difficile":
+                        self.clock_tick = 35
 
 
 if __name__ == '__main__':
