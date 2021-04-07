@@ -71,34 +71,12 @@ class Jeu:
 
         while self.jeu_en_cours:
 
-            for evenement in pygame.event.get():
-
-                if evenement.type == pygame.QUIT:
-                    sys.exit()
-
-                if evenement.type == pygame.KEYDOWN:
-
-                    if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
-                        self.serpent_direction_x = 10
-                        self.serpent_direction_y = 0
-
-                    if evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
-                        self.serpent_direction_x = -10
-                        self.serpent_direction_y = 0
-
-                    if evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
-                        self.serpent_direction_y = 10
-                        self.serpent_direction_x = 0
-
-                    if evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
-                        self.serpent_direction_y = -10
-                        self.serpent_direction_x = 0
+            self.gestion_evenements()
+            self.serpent_mouvement()
 
             if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
                     or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
                 sys.exit()
-
-            self.serpent_mouvement()
 
             if self.pomme_position_y == self.serpent_position_y and self.pomme_position_x == self.serpent_position_x:
 
@@ -211,6 +189,31 @@ class Jeu:
                     self.ecran_du_debut = False
 
                     self.clock_tick = 35
+
+    def gestion_evenements(self):
+
+        for evenement in pygame.event.get():
+
+            if evenement.type == pygame.QUIT:
+                sys.exit()
+
+            if evenement.type == pygame.KEYDOWN:
+
+                if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
+                    self.serpent_direction_x = 10
+                    self.serpent_direction_y = 0
+
+                if evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
+                    self.serpent_direction_x = -10
+                    self.serpent_direction_y = 0
+
+                if evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
+                    self.serpent_direction_y = 10
+                    self.serpent_direction_x = 0
+
+                if evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
+                    self.serpent_direction_y = -10
+                    self.serpent_direction_x = 0
 
 
 if __name__ == '__main__':
