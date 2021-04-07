@@ -171,7 +171,6 @@ class Jeu:
                     print(self.boutton_1[4])
 
                     self.ecran_du_debut = False
-
                     self.clock_tick = 15
 
                 elif self.boutton_2[0] <= x <= self.boutton_2[0] + self.boutton_2[2] \
@@ -179,7 +178,6 @@ class Jeu:
                     print(self.boutton_2[4])
 
                     self.ecran_du_debut = False
-
                     self.clock_tick = 25
 
                 elif self.boutton_3[0] <= x <= self.boutton_3[0] + self.boutton_3[2] \
@@ -187,7 +185,6 @@ class Jeu:
                     print(self.boutton_3[4])
 
                     self.ecran_du_debut = False
-
                     self.clock_tick = 35
 
     def gestion_evenements(self):
