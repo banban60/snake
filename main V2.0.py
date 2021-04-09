@@ -34,9 +34,9 @@ class Jeu:
 
         self.score = 0
 
-        self.boutton_1 = (60, 425, 200, 50, "Facile")
-        self.boutton_2 = (300, 425, 200, 50, "Moyen")
-        self.boutton_3 = (540, 425, 200, 50, "Difficile")
+        self.boutton_facile = (60, 425, 200, 50, "Facile")
+        self.boutton_moyen = (300, 425, 200, 50, "Moyen")
+        self.boutton_difficile = (540, 425, 200, 50, "Difficile")
 
     def fonction_principale(self):
 
@@ -70,7 +70,7 @@ class Jeu:
                 self.creer_boutton('immense', "Difficile", (540, 425, 200, 50), (565, 433, 200, 50), (255, 255, 255),
                                    (0, 0, 0))
 
-                self.boutton_click()
+                self.boutton_difficulte_click()
                 pygame.display.flip()
 
             if self.jeu_en_cours:
@@ -79,7 +79,7 @@ class Jeu:
 
                 if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
                         or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
-                    sys.exit()
+                    self.ecran_mort()
 
                 self.serpent_mouvement()
                 self.manger_pomme()
@@ -148,7 +148,7 @@ class Jeu:
         pygame.draw.rect(self.ecran, couleur_boutton, boutton_rectangle)
         self.creer_message(font, texte, texte_rectangle, couleur_texte)
 
-    def boutton_click(self):
+    def boutton_difficulte_click(self):
 
         for evenement in pygame.event.get():
 
@@ -156,26 +156,26 @@ class Jeu:
                 x, y = evenement.pos    # the x and y coordinates of the cursor position where the mouse was clicked
                 print(x, y)
 
-                if self.boutton_1[0] <= x <= self.boutton_1[0] + self.boutton_1[2] \
-                        and self.boutton_1[1] <= y <= self.boutton_1[1] + self.boutton_1[3]:
-                    print(self.boutton_1[4])
+                if self.boutton_facile[0] <= x <= self.boutton_facile[0] + self.boutton_facile[2] \
+                        and self.boutton_facile[1] <= y <= self.boutton_facile[1] + self.boutton_facile[3]:
+                    print(self.boutton_facile[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
 
                     self.clock_tick = 15
 
-                elif self.boutton_2[0] <= x <= self.boutton_2[0] + self.boutton_2[2] \
-                        and self.boutton_2[1] <= y <= self.boutton_2[1] + self.boutton_2[3]:
-                    print(self.boutton_2[4])
+                elif self.boutton_moyen[0] <= x <= self.boutton_moyen[0] + self.boutton_moyen[2] \
+                        and self.boutton_moyen[1] <= y <= self.boutton_moyen[1] + self.boutton_moyen[3]:
+                    print(self.boutton_moyen[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
                     self.clock_tick = 25
 
-                elif self.boutton_3[0] <= x <= self.boutton_3[0] + self.boutton_3[2] \
-                        and self.boutton_3[1] <= y <= self.boutton_3[1] + self.boutton_3[3]:
-                    print(self.boutton_3[4])
+                elif self.boutton_difficile[0] <= x <= self.boutton_difficile[0] + self.boutton_difficile[2] \
+                        and self.boutton_difficile[1] <= y <= self.boutton_difficile[1] + self.boutton_difficile[3]:
+                    print(self.boutton_difficile[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -207,7 +207,7 @@ class Jeu:
                     self.serpent_direction_x = 0
 
                 if evenement.key == pygame.K_u:
-                    self.reinitialiser_jeu()
+                    self.ecran_mort()
 
     def manger_pomme(self):
         if self.pomme_position_y == self.serpent_position_y and self.pomme_position_x == self.serpent_position_x:
@@ -217,13 +217,23 @@ class Jeu:
 
             self.score += 1
 
-    def reinitialiser_jeu(self):
+    def recommencer(self):
         self.serpent_position_x = 300
         self.serpent_position_y = 300
         self.serpent_direction_x = 0
         self.serpent_direction_y = 0
         self.jeu_en_cours = False
         self.ecran_du_debut = True
+
+    def ecran_mort(self):
+
+        while self.jeu_en_cours:
+
+            self.gestion_evenements()
+            self.ecran.fill((0, 0, 0))
+            self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (255, 255, 255), (0, 0, 0))
+            self.creer_boutton('immense', "Quitter", (257, 370, 285, 50), (263, 378, 200, 50), (255, 255, 255), (0, 0, 0))
+            pygame.display.flip()
 
 
 if __name__ == '__main__':
