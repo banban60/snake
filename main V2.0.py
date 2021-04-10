@@ -3,6 +3,14 @@ import random
 import pygame
 
 
+def gestion_evenements():
+
+    for evenement in pygame.event.get():
+
+        if evenement.type == pygame.QUIT:
+            sys.exit()
+
+
 class Jeu:
     def __init__(self):
         self.ecran = pygame.display.set_mode((800, 600))
@@ -77,7 +85,7 @@ class Jeu:
 
             if self.jeu_en_cours:
 
-                self.gestion_evenements()
+                gestion_evenements()
 
                 if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
                         or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
@@ -99,6 +107,27 @@ class Jeu:
                 pygame.display.flip()
 
     def serpent_mouvement(self):
+
+        for evenement in pygame.event.get():
+
+            if evenement.type == pygame.KEYDOWN:
+
+                if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
+                    self.serpent_direction_x = 10
+                    self.serpent_direction_y = 0
+
+                if evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
+                    self.serpent_direction_x = -10
+                    self.serpent_direction_y = 0
+
+                if evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
+                    self.serpent_direction_y = 10
+                    self.serpent_direction_x = 0
+
+                if evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
+                    self.serpent_direction_y = -10
+                    self.serpent_direction_x = 0
+
         self.serpent_position_x += self.serpent_direction_x
         self.serpent_position_y += self.serpent_direction_y
 
@@ -178,34 +207,6 @@ class Jeu:
                     self.jeu_en_cours = True
                     self.clock_tick = 35
 
-    def gestion_evenements(self):
-
-        for evenement in pygame.event.get():
-
-            if evenement.type == pygame.QUIT:
-                sys.exit()
-
-            if evenement.type == pygame.KEYDOWN:
-
-                if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
-                    self.serpent_direction_x = 10
-                    self.serpent_direction_y = 0
-
-                if evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
-                    self.serpent_direction_x = -10
-                    self.serpent_direction_y = 0
-
-                if evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
-                    self.serpent_direction_y = 10
-                    self.serpent_direction_x = 0
-
-                if evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
-                    self.serpent_direction_y = -10
-                    self.serpent_direction_x = 0
-
-                if evenement.key == pygame.K_u:
-                    self.ecran_mort()
-
     def manger_pomme(self):
         if self.pomme_position_y == self.serpent_position_y and self.pomme_position_x == self.serpent_position_x:
             self.pomme_position_x = random.randrange(120, 680, 10)
@@ -226,7 +227,7 @@ class Jeu:
 
         while self.jeu_en_cours:
 
-            self.gestion_evenements()
+            gestion_evenements()
             self.ecran.fill((0, 0, 0))
             self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
                                (0, 0, 0))
