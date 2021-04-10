@@ -37,6 +37,8 @@ class Jeu:
         self.boutton_facile = (60, 425, 200, 50, "Facile")
         self.boutton_moyen = (300, 425, 200, 50, "Moyen")
         self.boutton_difficile = (540, 425, 200, 50, "Difficile")
+        self.boutton_recommencer = (257, 180, 285, 50, "Recommencer")
+        self.boutton_quitter = (257, 370, 285, 50, "Quitter")
 
     def fonction_principale(self):
 
@@ -99,7 +101,6 @@ class Jeu:
     def serpent_mouvement(self):
         self.serpent_position_x += self.serpent_direction_x
         self.serpent_position_y += self.serpent_direction_y
-        print(self.serpent_position_x, self.serpent_position_y)
 
     def afficher_les_elements(self):
         self.ecran.fill((0, 0, 0))
@@ -124,7 +125,7 @@ class Jeu:
         for partie_du_serpent in self.positions_serpent[:-1]:
 
             if tete_serpent == partie_du_serpent:
-                sys.exit()
+                self.ecran_mort()
 
     def creer_message(self, font, message, message_rectangle, couleur):
 
@@ -154,11 +155,9 @@ class Jeu:
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
                 x, y = evenement.pos    # the x and y coordinates of the cursor position where the mouse was clicked
-                print(x, y)
 
                 if self.boutton_facile[0] <= x <= self.boutton_facile[0] + self.boutton_facile[2] \
                         and self.boutton_facile[1] <= y <= self.boutton_facile[1] + self.boutton_facile[3]:
-                    print(self.boutton_facile[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -167,7 +166,6 @@ class Jeu:
 
                 elif self.boutton_moyen[0] <= x <= self.boutton_moyen[0] + self.boutton_moyen[2] \
                         and self.boutton_moyen[1] <= y <= self.boutton_moyen[1] + self.boutton_moyen[3]:
-                    print(self.boutton_moyen[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -175,7 +173,6 @@ class Jeu:
 
                 elif self.boutton_difficile[0] <= x <= self.boutton_difficile[0] + self.boutton_difficile[2] \
                         and self.boutton_difficile[1] <= y <= self.boutton_difficile[1] + self.boutton_difficile[3]:
-                    print(self.boutton_difficile[4])
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -231,9 +228,30 @@ class Jeu:
 
             self.gestion_evenements()
             self.ecran.fill((0, 0, 0))
-            self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (255, 255, 255), (0, 0, 0))
-            self.creer_boutton('immense', "Quitter", (257, 370, 285, 50), (263, 378, 200, 50), (255, 255, 255), (0, 0, 0))
+            self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
+                               (0, 0, 0))
+            self.creer_boutton('immense', "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
+                               (0, 0, 0))
+            self.bouton_mort_click()
             pygame.display.flip()
+
+    def bouton_mort_click(self):
+
+        for evenement in pygame.event.get():
+
+            if evenement.type == pygame.MOUSEBUTTONDOWN:
+
+                x, y = evenement.pos
+                print(x, y)
+
+                if self.boutton_recommencer[0] <= x <= self.boutton_recommencer[0] + self.boutton_recommencer[2] \
+                        and self.boutton_recommencer[1] <= y <= self.boutton_recommencer[1] + self.boutton_recommencer[3]:
+
+                    self.recommencer()
+
+                elif self.boutton_quitter[0] <= x <= self.boutton_quitter[0] + self.boutton_quitter[2] \
+                        and self.boutton_quitter[1] <= y <= self.boutton_quitter[1] + self.boutton_quitter[3]:
+                    sys.exit()
 
 
 if __name__ == '__main__':
