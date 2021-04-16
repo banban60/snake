@@ -89,9 +89,6 @@ class Jeu:
                         or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
                     self.ecran_mort()
 
-                print(self.serpent_position_x, self.serpent_position_y)
-                print(self.positions_serpent)
-
     def serpent_mouvement(self):
 
         for evenement in pygame.event.get():
