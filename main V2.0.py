@@ -89,6 +89,9 @@ class Jeu:
                         or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
                     self.ecran_mort()
 
+                print(self.serpent_position_x, self.serpent_position_y)
+                print(self.positions_serpent)
+
     def serpent_mouvement(self):
 
         for evenement in pygame.event.get():
@@ -198,8 +201,7 @@ class Jeu:
                     self.jeu_en_cours = True
                     self.clock_tick = 35
 
-    @staticmethod
-    def gestion_evenements(evenement):
+    def gestion_evenements(self, evenement):
 
         if evenement.type == pygame.QUIT:
             sys.exit()
@@ -229,6 +231,8 @@ class Jeu:
         self.serpent_position_y = 300
         self.serpent_direction_x = 0
         self.serpent_direction_y = 0
+
+        self.positions_serpent = []
         self.taille_du_serpent = 0
         self.score = 0
 
