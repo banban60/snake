@@ -198,7 +198,8 @@ class Jeu:
                     self.jeu_en_cours = True
                     self.clock_tick = 35
 
-    def gestion_evenements(self, evenement):
+    @staticmethod
+    def gestion_evenements(evenement):
 
         if evenement.type == pygame.QUIT:
             sys.exit()
