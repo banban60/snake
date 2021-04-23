@@ -43,27 +43,30 @@ class Jeu:
         self.boutton_recommencer = (257, 180, 285, 50, "Recommencer")
         self.boutton_quitter = (257, 370, 285, 50, "Quitter")
 
+        self.blanc = (255, 255, 255)
+
     def fonction_principale(self):
 
         while self.game:
 
             if self.ecran_du_debut:
-
                 self.ecran.fill((0, 0, 0))
 
                 self.ecran.blit(self.image_titre, (270, 25, 100, 50))
-                self.creer_message('moyenne', "Le but du jeu est que le serpent se développe",
-                                   (170, 200, 200, 5), (240, 240, 240))
-                self.creer_message('moyenne', "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
-                                   (75, 220, 200, 5), (240, 240, 240))
+                self.creer_message('petite', "Le but du jeu est que le serpent se développe",
+                                   (85, 200, 200, 5), (240, 240, 240))
+                self.creer_message('petite', "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
+                                   (10, 220, 200, 5), (240, 240, 240))
                 self.creer_message('grande', "Choissisez la difficulté du jeu",
-                                   (160, 350, 200, 5), (255, 255, 255))
-                self.creer_boutton('immense', "Facile", (60, 425, 200, 50), (100, 433, 200, 50), (255, 255, 255),
+                                   (160, 350, 200, 5), self.blanc)
+                self.creer_boutton('immense', "Facile", (60, 425, 200, 50), (100, 433, 200, 50), self.blanc,
                                    (0, 0, 0))
-                self.creer_boutton('immense', "Moyen", (300, 425, 200, 50), (340, 433, 200, 50), (255, 255, 255),
+                self.creer_boutton('immense', "Moyen", (300, 425, 200, 50), (340, 433, 200, 50), self.blanc,
                                    (0, 0, 0))
-                self.creer_boutton('immense', "Difficile", (540, 425, 200, 50), (565, 433, 200, 50), (255, 255, 255),
+                self.creer_boutton('immense', "Difficile", (540, 425, 200, 50), (565, 433, 200, 50), self.blanc,
                                    (0, 0, 0))
+
+                self.tableau_score()
 
                 self.boutton_difficulte_click()
                 pygame.display.flip()
@@ -101,15 +104,15 @@ class Jeu:
                     self.serpent_direction_x = 10
                     self.serpent_direction_y = 0
 
-                if evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
+                elif evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
                     self.serpent_direction_x = -10
                     self.serpent_direction_y = 0
 
-                if evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
+                elif evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
                     self.serpent_direction_y = 10
                     self.serpent_direction_x = 0
 
-                if evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
+                elif evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
                     self.serpent_direction_y = -10
                     self.serpent_direction_x = 0
 
@@ -122,7 +125,7 @@ class Jeu:
         self.creer_message('grande', "Snake Game", (320, 10, 100, 50), (20, 220, 20))
         self.creer_message('grande', str(self.score), (410, 50, 50, 50), (20, 220, 20))
 
-        pygame.draw.rect(self.ecran, (255, 255, 255), (100, 100, 600, 500), 3)
+        pygame.draw.rect(self.ecran, self.blanc, (100, 100, 600, 500), 3)
 
         pygame.draw.rect(self.ecran, (255, 0, 0), (self.pomme_position_x, self.pomme_position_y,
                                                    self.pomme, self.pomme))
@@ -148,7 +151,7 @@ class Jeu:
     def creer_message(self, font, message, message_rectangle, couleur):
 
         if font == 'petite':
-            font = pygame.font.SysFont('Lato', 20, False)
+            font = pygame.font.SysFont('Lato', 25, False)
 
         elif font == 'moyenne':
             font = pygame.font.SysFont('Lato', 30, False)
@@ -174,7 +177,7 @@ class Jeu:
             self.gestion_evenements(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
-                x, y = evenement.pos    # the x and y coordinates of the cursor position where the mouse was clicked
+                x, y = evenement.pos  # the x and y coordinates of the cursor position where the mouse was clicked
 
                 if self.boutton_facile[0] <= x <= self.boutton_facile[0] + self.boutton_facile[2] \
                         and self.boutton_facile[1] <= y <= self.boutton_facile[1] + self.boutton_facile[3]:
@@ -206,7 +209,8 @@ class Jeu:
 
     def manger_pomme(self):
 
-        if self.pomme_or_position_y == self.serpent_position_y and self.pomme_or_position_x == self.serpent_position_x:
+        if self.pomme_or_position_y == self.serpent_position_y and self.pomme_or_position_x == self.serpent_position_x \
+                and self.pomme_or_ou_pas <= 15:
             self.pomme_or_ou_pas = 100
             self.pomme_or_position_x = random.randrange(120, 680, 10)
             self.pomme_or_position_y = random.randrange(120, 580, 10)
@@ -225,6 +229,8 @@ class Jeu:
             self.score += 1
 
     def recommencer(self):
+        self.enregistrer_score()
+
         self.serpent_position_x = 300
         self.serpent_position_y = 300
         self.serpent_direction_x = 0
@@ -240,7 +246,6 @@ class Jeu:
     def ecran_mort(self):
 
         while self.jeu_en_cours:
-
             self.ecran.fill((0, 0, 0))
             self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
                                (0, 0, 0))
@@ -252,13 +257,11 @@ class Jeu:
     def bouton_mort_click(self):
 
         for evenement in pygame.event.get():
-
             self.gestion_evenements(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
 
                 x, y = evenement.pos
-                print(x, y)
 
                 if self.boutton_recommencer[0] <= x <= self.boutton_recommencer[0] + self.boutton_recommencer[2] \
                         and self.boutton_recommencer[1] <= y <= \
@@ -268,7 +271,58 @@ class Jeu:
 
                 elif self.boutton_quitter[0] <= x <= self.boutton_quitter[0] + self.boutton_quitter[2] \
                         and self.boutton_quitter[1] <= y <= self.boutton_quitter[1] + self.boutton_quitter[3]:
+                    self.enregistrer_score()
                     sys.exit()
+
+    def enregistrer_score(self):
+
+        with open("Scores.txt", "a+") as file:
+            file.write(str(self.score) + "\n")
+            file.close()
+
+    def tableau_score(self):
+
+        with open("Scores.txt", "r+") as file:
+            scores_liste = file.readlines()
+            scores_liste = [int(score.strip()) for score in scores_liste]
+            scores_liste.sort()
+            scores_liste.reverse()
+            del scores_liste[10:]
+            file.close()
+
+        nombre_cases = 0
+        tableau_cases_gauche = [600, 50, 20, 20]
+        tableau_cases_centre = [600, 50, 120, 20]
+        nombres_gauche = [605, 52, 20, 20]
+
+        while nombre_cases <= 10:
+            pygame.draw.rect(self.ecran, self.blanc, tableau_cases_gauche, 2, 5)
+            pygame.draw.rect(self.ecran, self.blanc, tableau_cases_centre, 2, 5)
+
+            if nombre_cases == 10:
+                self.creer_message('petite', str(nombre_cases), (tableau_cases_gauche[0],
+                                                                 tableau_cases_gauche[1] + 2,
+                                                                 tableau_cases_gauche[2], tableau_cases_gauche[3]),
+                                   self.blanc)
+
+            elif nombre_cases == 0:
+                pass
+
+            else:
+                self.creer_message('petite', str(nombre_cases), nombres_gauche, self.blanc)
+
+            nombre_cases += 1
+            tableau_cases_gauche[1] += tableau_cases_gauche[3]
+            tableau_cases_centre[1] += tableau_cases_centre[3]
+            nombres_gauche[1] += nombres_gauche[3]
+
+        self.creer_message('petite', "Scoreboard", (621, 51), self.blanc)
+
+        scores_position = [655, 72]
+
+        for score in scores_liste:
+            self.creer_message('petite', str(score), scores_position, self.blanc)
+            scores_position[1] += 20
 
 
 if __name__ == '__main__':
