@@ -361,8 +361,21 @@ class Jeu:
         scoreboard("Difficile", [570, 50, 20, 20], [570, 50, 120, 20], [575, 52, 20, 20], [628, 72])
 
     def bouttons_scoreboard_click(self):
+
         for evenement in pygame.event.get():
+
             self.gestion_evenements(evenement)
+
+            if evenement.type == pygame.MOUSEBUTTONDOWN:
+
+                x, y = evenement.pos
+
+                if self.boutton_retour[0] <= x <= self.boutton_retour[0] + self.boutton_retour[2] \
+                        and self.boutton_retour[1] <= y <= \
+                        self.boutton_retour[1] + self.boutton_retour[3]:
+
+                    self.ecran_du_debut = True
+                    self.ecran_scoreboards = False
 
 
 if __name__ == '__main__':
