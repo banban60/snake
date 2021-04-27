@@ -104,12 +104,12 @@ class Jeu:
 
                 self.se_mord(la_tete_du_serpent)
 
-                if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
-                        or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
-                    self.ecran_mort()
-
                 self.clock.tick(self.clock_tick)
                 pygame.display.flip()
+
+                if self.serpent_position_x <= 90 or self.serpent_position_x >= 700 \
+                        or self.serpent_position_y <= 90 or self.serpent_position_y >= 600:
+                    self.ecran_mort()
 
     def serpent_mouvement(self):
 
