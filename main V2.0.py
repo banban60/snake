@@ -91,6 +91,10 @@ class Jeu:
 
             if self.jeu_en_cours:
 
+                if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
+                        or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
+                    self.ecran_mort()
+
                 self.serpent_mouvement()
                 self.manger_pomme()
 
@@ -106,10 +110,6 @@ class Jeu:
 
                 self.clock.tick(self.clock_tick)
                 pygame.display.flip()
-
-                if self.serpent_position_x <= 90 or self.serpent_position_x >= 700 \
-                        or self.serpent_position_y <= 90 or self.serpent_position_y >= 600:
-                    self.ecran_mort()
 
     def serpent_mouvement(self):
 
@@ -259,6 +259,7 @@ class Jeu:
             self.score += 1
 
     def recommencer(self):
+
         self.enregistrer_score()
 
         self.serpent_position_x = 300
