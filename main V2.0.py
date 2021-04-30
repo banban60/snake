@@ -50,13 +50,14 @@ class Jeu:
         self.boutton_quitter = (257, 370, 285, 50)
 
         self.blanc = (255, 255, 255)
+        self.noir = (0, 0, 0)
 
     def fonction_principale(self):
 
         while self.game:
 
             if self.ecran_du_debut:
-                self.ecran.fill((0, 0, 0))
+                self.ecran.fill(self.noir)
 
                 self.ecran.blit(self.image_titre, (270, 25, 100, 50))
                 self.creer_message('petite', "Le but du jeu est que le serpent se développe",
@@ -66,23 +67,23 @@ class Jeu:
                 self.creer_message('grande', "Choissisez la difficulté du jeu",
                                    (160, 350, 200, 5), self.blanc)
                 self.creer_boutton('immense', "Facile", self.boutton_facile, (100, 433), self.blanc,
-                                   (0, 0, 0))
+                                   self.noir)
                 self.creer_boutton('immense', "Moyen", self.boutton_moyen, (340, 433), self.blanc,
-                                   (0, 0, 0))
+                                   self.noir)
                 self.creer_boutton('immense', "Difficile", self.boutton_difficile, (565, 433), self.blanc,
-                                   (0, 0, 0))
+                                   self.noir)
 
                 self.creer_boutton('moyenne', "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc,
-                                   (0, 0, 0))
+                                   self.noir)
 
                 self.bouttons_debut_click()
                 pygame.display.flip()
 
             if self.ecran_scoreboards:
-                self.ecran.fill((0, 0, 0))
+                self.ecran.fill(self.noir)
 
                 self.creer_boutton('moyenne', "Retour", self.boutton_retour, (30, 89), self.blanc,
-                                   (0, 0, 0))
+                                   self.noir)
 
                 self.menu_scoreboards()
                 self.bouttons_scoreboard_click()
@@ -90,10 +91,6 @@ class Jeu:
                 pygame.display.flip()
 
             if self.jeu_en_cours:
-
-                if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
-                        or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
-                    self.ecran_mort()
 
                 self.serpent_mouvement()
                 self.manger_pomme()
@@ -110,6 +107,10 @@ class Jeu:
 
                 self.clock.tick(self.clock_tick)
                 pygame.display.flip()
+
+                if self.serpent_position_x <= 100 or self.serpent_position_x >= 700 \
+                        or self.serpent_position_y <= 100 or self.serpent_position_y >= 600:
+                    self.ecran_mort()
 
     def serpent_mouvement(self):
 
@@ -139,7 +140,7 @@ class Jeu:
         self.serpent_position_y += self.serpent_direction_y
 
     def afficher_les_elements(self):
-        self.ecran.fill((0, 0, 0))
+        self.ecran.fill(self.noir)
 
         self.creer_message('grande', "Snake Game", (320, 10, 100, 50), (20, 220, 20))
         self.creer_message('grande', str(self.score), (410, 50, 50, 50), (20, 220, 20))
@@ -277,11 +278,11 @@ class Jeu:
     def ecran_mort(self):
 
         while self.jeu_en_cours:
-            self.ecran.fill((0, 0, 0))
+            self.ecran.fill(self.noir)
             self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
-                               (0, 0, 0))
+                               self.noir)
             self.creer_boutton('immense', "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
-                               (0, 0, 0))
+                               self.noir)
             self.bouton_mort_click()
             pygame.display.flip()
 
@@ -357,9 +358,9 @@ class Jeu:
                 self.creer_message('petite', str(score), scores_position, self.blanc)
                 scores_position[1] += 20
 
-        scoreboard("Facile", [110, 50, 20, 20], [110, 50, 120, 20], [115, 52, 20, 20], [168, 72])
-        scoreboard("Moyen", [340, 50, 20, 20], [340, 50, 120, 20], [345, 52, 20, 20], [398, 72])
-        scoreboard("Difficile", [570, 50, 20, 20], [570, 50, 120, 20], [575, 52, 20, 20], [628, 72])
+        scoreboard("Facile", [110, 200, 20, 20], [110, 200, 120, 20], [115, 202, 20, 20], [168, 222])
+        scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
+        scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
 
     def bouttons_scoreboard_click(self):
 
