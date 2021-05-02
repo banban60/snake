@@ -60,21 +60,17 @@ class Jeu:
                 self.ecran.fill(self.noir)
 
                 self.ecran.blit(self.image_titre, (270, 25, 100, 50))
-                self.creer_message('petite', "Le but du jeu est que le serpent se développe",
+                self.creer_message(25, "Le but du jeu est que le serpent se développe",
                                    (85, 200, 200, 5), self.blanc)
-                self.creer_message('petite', "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
+                self.creer_message(25, "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
                                    (10, 220, 200, 5), self.blanc)
-                self.creer_message('grande', "Choissisez la difficulté du jeu",
-                                   (160, 350, 200, 5), self.blanc)
-                self.creer_boutton('immense', "Facile", self.boutton_facile, (100, 433), self.blanc,
-                                   self.noir)
-                self.creer_boutton('immense', "Moyen", self.boutton_moyen, (340, 433), self.blanc,
-                                   self.noir)
-                self.creer_boutton('immense', "Difficile", self.boutton_difficile, (565, 433), self.blanc,
-                                   self.noir)
+                self.creer_message(40, "Choissisez la difficulté du jeu",
+                                   (160, 350, 200, 5), self.blanc, True)
+                self.creer_boutton(50, "Facile", self.boutton_facile, (100, 433), self.blanc, self.noir, True)
+                self.creer_boutton(50, "Moyen", self.boutton_moyen, (340, 433), self.blanc, self.noir, True)
+                self.creer_boutton(50, "Difficile", self.boutton_difficile, (565, 433), self.blanc, self.noir, True)
 
-                self.creer_boutton('moyenne', "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc,
-                                   self.noir)
+                self.creer_boutton(35, "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc, self.noir)
 
                 self.bouttons_debut_click()
                 pygame.display.flip()
@@ -82,7 +78,7 @@ class Jeu:
             if self.ecran_scoreboards:
                 self.ecran.fill(self.noir)
 
-                self.creer_boutton('moyenne', "Retour", self.boutton_retour, (30, 89), self.blanc,
+                self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
                                    self.noir)
 
                 self.menu_scoreboards()
@@ -142,8 +138,8 @@ class Jeu:
     def afficher_les_elements(self):
         self.ecran.fill(self.noir)
 
-        self.creer_message('grande', "Snake Game", (320, 10, 100, 50), (20, 220, 20))
-        self.creer_message('grande', str(self.score), (410, 50, 50, 50), (20, 220, 20))
+        self.creer_message(40, "Snake Game", (320, 10, 100, 50), (20, 220, 20), True)
+        self.creer_message(40, str(self.score), (410, 50, 50, 50), (20, 220, 20), True)
 
         pygame.draw.rect(self.ecran, self.blanc, (100, 100, 600, 500), 3)
 
@@ -168,27 +164,17 @@ class Jeu:
             if tete_serpent == partie_du_serpent:
                 self.ecran_mort()
 
-    def creer_message(self, font, message, message_rectangle, couleur):
+    def creer_message(self, font, message, message_rectangle, couleur, gras=False):
 
-        if font == 'petite':
-            font = pygame.font.SysFont('Lato', 25, False)
-
-        elif font == 'moyenne':
-            font = pygame.font.SysFont('Lato', 35, False)
-
-        elif font == 'grande':
-            font = pygame.font.SysFont('Lato', 40, True)
-
-        elif font == 'immense':
-            font = pygame.font.SysFont('Lato', 50, True)
+        font = pygame.font.SysFont('Lato', font, gras)
 
         message = font.render(message, True, couleur)
 
         self.ecran.blit(message, message_rectangle)
 
-    def creer_boutton(self, font, texte, boutton_rectangle, texte_rectangle, couleur_boutton, couleur_texte):
+    def creer_boutton(self, font, text, boutton_rectangle, texte_rectangle, couleur_boutton, couleur_texte, gras=False):
         pygame.draw.rect(self.ecran, couleur_boutton, boutton_rectangle)
-        self.creer_message(font, texte, texte_rectangle, couleur_texte)
+        self.creer_message(font, text, texte_rectangle, couleur_texte, gras)
 
     def bouttons_debut_click(self):
 
@@ -279,9 +265,9 @@ class Jeu:
 
         while self.jeu_en_cours:
             self.ecran.fill(self.noir)
-            self.creer_boutton('immense', "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
+            self.creer_boutton(50, "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
                                self.noir)
-            self.creer_boutton('immense', "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
+            self.creer_boutton(50, "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
                                self.noir)
             self.bouton_mort_click()
             pygame.display.flip()
@@ -325,13 +311,13 @@ class Jeu:
                 file.close()
 
             if difficulte == "Facile":
-                self.creer_message('petite', str(difficulte), (cases_centre[0] + 43, cases_centre[1] + 1), self.blanc)
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 43, cases_centre[1] + 1), self.blanc)
 
             elif difficulte == "Moyen":
-                self.creer_message('petite', str(difficulte), (cases_centre[0] + 41, cases_centre[1] + 1), self.blanc)
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 41, cases_centre[1] + 1), self.blanc)
 
             elif difficulte == "Difficile":
-                self.creer_message('petite', str(difficulte), (cases_centre[0] + 35, cases_centre[1] + 1), self.blanc)
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 35, cases_centre[1] + 1), self.blanc)
 
             nombre_cases = 0
 
@@ -340,14 +326,14 @@ class Jeu:
                 pygame.draw.rect(self.ecran, self.blanc, cases_centre, 2, 5)
 
                 if nombre_cases == 10:
-                    self.creer_message('petite', str(nombre_cases), (cases_gauche[0], cases_gauche[1] + 2,
-                                                                     cases_gauche[2], cases_gauche[3]), self.blanc)
+                    self.creer_message(25, str(nombre_cases), (cases_gauche[0], cases_gauche[1] + 2,
+                                                               cases_gauche[2], cases_gauche[3]), self.blanc)
 
                 elif nombre_cases == 0:
                     pass
 
                 else:
-                    self.creer_message('petite', str(nombre_cases), nombres_gauche, self.blanc)
+                    self.creer_message(25, str(nombre_cases), nombres_gauche, self.blanc)
 
                 nombre_cases += 1
                 cases_gauche[1] += cases_gauche[3]
@@ -355,12 +341,14 @@ class Jeu:
                 nombres_gauche[1] += nombres_gauche[3]
 
             for score in scores_liste:
-                self.creer_message('petite', str(score), scores_position, self.blanc)
+                self.creer_message(25, str(score), scores_position, self.blanc)
                 scores_position[1] += 20
 
         scoreboard("Facile", [110, 200, 20, 20], [110, 200, 120, 20], [115, 202, 20, 20], [168, 222])
         scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
         scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
+
+        self.creer_message(60, "Meilleurs scores", (205, 85, 100, 30), self.blanc, True)
 
     def bouttons_scoreboard_click(self):
 
@@ -375,7 +363,6 @@ class Jeu:
                 if self.boutton_retour[0] <= x <= self.boutton_retour[0] + self.boutton_retour[2] \
                         and self.boutton_retour[1] <= y <= \
                         self.boutton_retour[1] + self.boutton_retour[3]:
-
                     self.ecran_du_debut = True
                     self.ecran_scoreboards = False
 
