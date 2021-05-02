@@ -112,7 +112,7 @@ class Jeu:
 
         for evenement in pygame.event.get():
 
-            self.gestion_evenements(evenement)
+            self.gestion_quitter(evenement)
 
             if evenement.type == pygame.KEYDOWN:
 
@@ -180,7 +180,7 @@ class Jeu:
 
         for evenement in pygame.event.get():
 
-            self.gestion_evenements(evenement)
+            self.gestion_quitter(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
                 x, y = evenement.pos  # the x and y coordinates of the cursor position where the mouse was clicked
@@ -219,7 +219,7 @@ class Jeu:
                     self.ecran_scoreboards = True
 
     @staticmethod
-    def gestion_evenements(evenement):
+    def gestion_quitter(evenement):
 
         if evenement.type == pygame.QUIT:
             sys.exit()
@@ -266,16 +266,16 @@ class Jeu:
         while self.jeu_en_cours:
             self.ecran.fill(self.noir)
             self.creer_boutton(50, "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
-                               self.noir)
+                               self.noir, True)
             self.creer_boutton(50, "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
-                               self.noir)
+                               self.noir, True)
             self.bouton_mort_click()
             pygame.display.flip()
 
     def bouton_mort_click(self):
 
         for evenement in pygame.event.get():
-            self.gestion_evenements(evenement)
+            self.gestion_quitter(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
 
@@ -354,7 +354,7 @@ class Jeu:
 
         for evenement in pygame.event.get():
 
-            self.gestion_evenements(evenement)
+            self.gestion_quitter(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
 
