@@ -209,10 +209,9 @@ class Jeu:
             self.gestion_quitter(evenement)
 
             if evenement.type == pygame.MOUSEBUTTONDOWN:
-                x, y = evenement.pos  # the x and y coordinates of the cursor position where the mouse was clicked
+                x, y = evenement.pos
 
-                if self.boutton_facile[0] <= x <= self.boutton_facile[0] + self.boutton_facile[2] \
-                        and self.boutton_facile[1] <= y <= self.boutton_facile[1] + self.boutton_facile[3]:
+                if self.boutton_click(x, y, self.boutton_facile):
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -220,8 +219,7 @@ class Jeu:
                     self.clock_tick = 15
                     self.difficulte = "Facile"
 
-                elif self.boutton_moyen[0] <= x <= self.boutton_moyen[0] + self.boutton_moyen[2] \
-                        and self.boutton_moyen[1] <= y <= self.boutton_moyen[1] + self.boutton_moyen[3]:
+                elif self.boutton_click(x, y, self.boutton_moyen):
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -229,8 +227,7 @@ class Jeu:
                     self.clock_tick = 25
                     self.difficulte = "Moyen"
 
-                elif self.boutton_difficile[0] <= x <= self.boutton_difficile[0] + self.boutton_difficile[2] \
-                        and self.boutton_difficile[1] <= y <= self.boutton_difficile[1] + self.boutton_difficile[3]:
+                elif self.boutton_click(x, y, self.boutton_difficile):
 
                     self.ecran_du_debut = False
                     self.jeu_en_cours = True
@@ -238,14 +235,12 @@ class Jeu:
                     self.clock_tick = 35
                     self.difficulte = "Difficile"
 
-                elif self.boutton_scoreboard[0] <= x <= self.boutton_scoreboard[0] + self.boutton_scoreboard[2] \
-                        and self.boutton_scoreboard[1] <= y <= self.boutton_scoreboard[1] + self.boutton_scoreboard[3]:
+                elif self.boutton_click(x, y, self.boutton_scoreboard):
 
                     self.ecran_du_debut = False
                     self.ecran_scoreboards = True
 
-                elif self.boutton_style[0] <= x <= self.boutton_style[0] + self.boutton_style[2] \
-                        and self.boutton_style[1] <= y <= self.boutton_style[1] + self.boutton_style[3]:
+                elif self.boutton_click(x, y, self.boutton_style):
 
                     self.ecran_du_debut = False
                     self.ecran_choix_style = True
@@ -313,14 +308,11 @@ class Jeu:
 
                 x, y = evenement.pos
 
-                if self.boutton_recommencer[0] <= x <= self.boutton_recommencer[0] + self.boutton_recommencer[2] \
-                        and self.boutton_recommencer[1] <= y <= \
-                        self.boutton_recommencer[1] + self.boutton_recommencer[3]:
+                if self.boutton_click(x, y, self.recommencer()):
 
                     self.recommencer()
 
-                elif self.boutton_quitter[0] <= x <= self.boutton_quitter[0] + self.boutton_quitter[2] \
-                        and self.boutton_quitter[1] <= y <= self.boutton_quitter[1] + self.boutton_quitter[3]:
+                elif self.boutton_click(x, y, self.boutton_quitter):
                     self.enregistrer_score()
                     sys.exit()
 
@@ -392,12 +384,19 @@ class Jeu:
 
                 x, y = evenement.pos
 
-                if self.boutton_retour[0] <= x <= self.boutton_retour[0] + self.boutton_retour[2] \
-                        and self.boutton_retour[1] <= y <= \
-                        self.boutton_retour[1] + self.boutton_retour[3]:
+                if self.boutton_click(x, y, self.boutton_retour):
+
                     self.ecran_du_debut = True
                     self.ecran_scoreboards = False
                     self.ecran_choix_style = False
+
+    def boutton_click(self, x, y, boutton):
+
+        if boutton[0] <= x <= boutton[0] + boutton[2] and boutton[1] <= y <= boutton[1] + boutton[3]:
+            return True
+
+        else:
+            return False
 
 
 if __name__ == '__main__':
