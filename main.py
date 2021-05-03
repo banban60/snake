@@ -24,7 +24,7 @@ class Jeu:
 
         self.ecran_du_debut = True
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent.png')
+        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_vert.png')
 
         self.image = pygame.image.load('snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (200, 100))

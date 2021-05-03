@@ -11,6 +11,7 @@ class Jeu:
 
         self.ecran_du_debut = True
         self.ecran_scoreboards = False
+        self.ecran_choix_style = False
         self.jeu_en_cours = False
         self.game = True
 
@@ -32,7 +33,7 @@ class Jeu:
         self.pomme = 10
         self.pomme_or_ou_pas = 100
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent.png')
+        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_vert.png')
 
         self.image = pygame.image.load('snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (250, 200))
@@ -43,6 +44,7 @@ class Jeu:
         self.boutton_moyen = (300, 425, 200, 50)
         self.boutton_difficile = (540, 425, 200, 50)
         self.boutton_scoreboard = (20, 85, 220, 30)
+        self.boutton_style = (560, 85, 220, 30)
 
         self.boutton_retour = (20, 85, 100, 30)
 
@@ -57,32 +59,23 @@ class Jeu:
         while self.game:
 
             if self.ecran_du_debut:
-                self.ecran.fill(self.noir)
 
-                self.ecran.blit(self.image_titre, (270, 25, 100, 50))
-                self.creer_message(25, "Le but du jeu est que le serpent se développe",
-                                   (85, 200, 200, 5), self.blanc)
-                self.creer_message(25, "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
-                                   (10, 220, 200, 5), self.blanc)
-                self.creer_message(40, "Choissisez la difficulté du jeu",
-                                   (160, 350, 200, 5), self.blanc, True)
-                self.creer_boutton(50, "Facile", self.boutton_facile, (100, 433), self.blanc, self.noir, True)
-                self.creer_boutton(50, "Moyen", self.boutton_moyen, (340, 433), self.blanc, self.noir, True)
-                self.creer_boutton(50, "Difficile", self.boutton_difficile, (565, 433), self.blanc, self.noir, True)
-
-                self.creer_boutton(35, "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc, self.noir)
-
+                self.afficher_elements_debut()
                 self.bouttons_debut_click()
+
                 pygame.display.flip()
 
             if self.ecran_scoreboards:
-                self.ecran.fill(self.noir)
 
-                self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
-                                   self.noir)
+                self.afficher_elements_scoreboards()
+                self.bouttons_retour_click()
 
-                self.menu_scoreboards()
-                self.bouttons_scoreboard_click()
+                pygame.display.flip()
+
+            if self.ecran_choix_style:
+
+                self.afficher_elements_style()
+                self.bouttons_retour_click()
 
                 pygame.display.flip()
 
@@ -97,7 +90,7 @@ class Jeu:
                 if len(self.positions_serpent) > self.taille_du_serpent:
                     self.positions_serpent.pop(0)
 
-                self.afficher_les_elements()
+                self.afficher_elements_jeu()
 
                 self.se_mord(la_tete_du_serpent)
 
@@ -135,7 +128,40 @@ class Jeu:
         self.serpent_position_x += self.serpent_direction_x
         self.serpent_position_y += self.serpent_direction_y
 
-    def afficher_les_elements(self):
+    def afficher_elements_debut(self):
+
+        self.ecran.fill(self.noir)
+
+        self.ecran.blit(self.image_titre, (270, 25, 100, 50))
+        self.creer_message(25, "Le but du jeu est que le serpent se développe",
+                           (85, 200, 200, 5), self.blanc)
+        self.creer_message(25, "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
+                           (10, 220, 200, 5), self.blanc)
+        self.creer_message(40, "Choissisez la difficulté du jeu",
+                           (160, 350, 200, 5), self.blanc, True)
+        self.creer_boutton(50, "Facile", self.boutton_facile, (100, 433), self.blanc, self.noir, True)
+        self.creer_boutton(50, "Moyen", self.boutton_moyen, (340, 433), self.blanc, self.noir, True)
+        self.creer_boutton(50, "Difficile", self.boutton_difficile, (565, 433), self.blanc, self.noir, True)
+
+        self.creer_boutton(35, "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc, self.noir)
+        self.creer_boutton(35, "Choix du style", self.boutton_style, (583, 89), self.blanc, self.noir)
+
+    def afficher_elements_scoreboards(self):
+
+        self.ecran.fill(self.noir)
+
+        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
+                           self.noir)
+
+        self.afficher_menu_scoreboards()
+
+    def afficher_elements_style(self):
+
+        self.ecran.fill(self.noir)
+        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
+                           self.noir)
+
+    def afficher_elements_jeu(self):
         self.ecran.fill(self.noir)
 
         self.creer_message(40, "Snake Game", (320, 10, 100, 50), (20, 220, 20), True)
@@ -218,6 +244,12 @@ class Jeu:
                     self.ecran_du_debut = False
                     self.ecran_scoreboards = True
 
+                elif self.boutton_style[0] <= x <= self.boutton_style[0] + self.boutton_style[2] \
+                        and self.boutton_style[1] <= y <= self.boutton_style[1] + self.boutton_style[3]:
+
+                    self.ecran_du_debut = False
+                    self.ecran_choix_style = True
+
     @staticmethod
     def gestion_quitter(evenement):
 
@@ -298,7 +330,7 @@ class Jeu:
             file.write(str(self.score) + "\n")
             file.close()
 
-    def menu_scoreboards(self):
+    def afficher_menu_scoreboards(self):
 
         def scoreboard(difficulte, cases_gauche, cases_centre, nombres_gauche, scores_position):
 
@@ -350,7 +382,7 @@ class Jeu:
 
         self.creer_message(60, "Meilleurs scores", (205, 85, 100, 30), self.blanc, True)
 
-    def bouttons_scoreboard_click(self):
+    def bouttons_retour_click(self):
 
         for evenement in pygame.event.get():
 
@@ -365,6 +397,7 @@ class Jeu:
                         self.boutton_retour[1] + self.boutton_retour[3]:
                     self.ecran_du_debut = True
                     self.ecran_scoreboards = False
+                    self.ecran_choix_style = False
 
 
 if __name__ == '__main__':
