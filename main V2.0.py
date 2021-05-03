@@ -208,42 +208,39 @@ class Jeu:
 
             self.gestion_quitter(evenement)
 
-            if evenement.type == pygame.MOUSEBUTTONDOWN:
-                x, y = evenement.pos
+            if self.boutton_click(evenement, self.boutton_facile):
 
-                if self.boutton_click(x, y, self.boutton_facile):
+                self.ecran_du_debut = False
+                self.jeu_en_cours = True
 
-                    self.ecran_du_debut = False
-                    self.jeu_en_cours = True
+                self.clock_tick = 15
+                self.difficulte = "Facile"
 
-                    self.clock_tick = 15
-                    self.difficulte = "Facile"
+            elif self.boutton_click(evenement, self.boutton_moyen):
 
-                elif self.boutton_click(x, y, self.boutton_moyen):
+                self.ecran_du_debut = False
+                self.jeu_en_cours = True
 
-                    self.ecran_du_debut = False
-                    self.jeu_en_cours = True
+                self.clock_tick = 25
+                self.difficulte = "Moyen"
 
-                    self.clock_tick = 25
-                    self.difficulte = "Moyen"
+            elif self.boutton_click(evenement, self.boutton_difficile):
 
-                elif self.boutton_click(x, y, self.boutton_difficile):
+                self.ecran_du_debut = False
+                self.jeu_en_cours = True
 
-                    self.ecran_du_debut = False
-                    self.jeu_en_cours = True
+                self.clock_tick = 35
+                self.difficulte = "Difficile"
 
-                    self.clock_tick = 35
-                    self.difficulte = "Difficile"
+            elif self.boutton_click(evenement, self.boutton_scoreboard):
 
-                elif self.boutton_click(x, y, self.boutton_scoreboard):
+                self.ecran_du_debut = False
+                self.ecran_scoreboards = True
 
-                    self.ecran_du_debut = False
-                    self.ecran_scoreboards = True
+            elif self.boutton_click(evenement, self.boutton_style):
 
-                elif self.boutton_click(x, y, self.boutton_style):
-
-                    self.ecran_du_debut = False
-                    self.ecran_choix_style = True
+                self.ecran_du_debut = False
+                self.ecran_choix_style = True
 
     @staticmethod
     def gestion_quitter(evenement):
@@ -302,19 +299,17 @@ class Jeu:
     def bouton_mort_click(self):
 
         for evenement in pygame.event.get():
+            
             self.gestion_quitter(evenement)
 
-            if evenement.type == pygame.MOUSEBUTTONDOWN:
+            if self.boutton_click(evenement, self.recommencer()):
 
-                x, y = evenement.pos
+                self.recommencer()
 
-                if self.boutton_click(x, y, self.recommencer()):
-
-                    self.recommencer()
-
-                elif self.boutton_click(x, y, self.boutton_quitter):
-                    self.enregistrer_score()
-                    sys.exit()
+            elif self.boutton_click(evenement, self.boutton_quitter):
+                
+                self.enregistrer_score()
+                sys.exit()
 
     def enregistrer_score(self):
 
@@ -380,23 +375,22 @@ class Jeu:
 
             self.gestion_quitter(evenement)
 
-            if evenement.type == pygame.MOUSEBUTTONDOWN:
+            if self.boutton_click(evenement, self.boutton_retour):
 
-                x, y = evenement.pos
+                self.ecran_du_debut = True
+                self.ecran_scoreboards = False
+                self.ecran_choix_style = False
 
-                if self.boutton_click(x, y, self.boutton_retour):
+    def boutton_click(self, evenement, boutton):
+        
+        if evenement.type == pygame.MOUSEBUTTONDOWN:
+            x, y = evenement.pos
 
-                    self.ecran_du_debut = True
-                    self.ecran_scoreboards = False
-                    self.ecran_choix_style = False
+            if boutton[0] <= x <= boutton[0] + boutton[2] and boutton[1] <= y <= boutton[1] + boutton[3]:
+                return True
 
-    def boutton_click(self, x, y, boutton):
-
-        if boutton[0] <= x <= boutton[0] + boutton[2] and boutton[1] <= y <= boutton[1] + boutton[3]:
-            return True
-
-        else:
-            return False
+            else:
+                return False
 
 
 if __name__ == '__main__':
