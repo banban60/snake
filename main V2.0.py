@@ -33,7 +33,7 @@ class Jeu:
         self.pomme = 10
         self.pomme_or_ou_pas = 100
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_vert.png')
+        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_Vert.png')
 
         self.image = pygame.image.load('snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (250, 200))
@@ -54,26 +54,26 @@ class Jeu:
         self.blanc = (255, 255, 255)
         self.noir = (0, 0, 0)
 
+        self.styles = [["Blanc", self.blanc], ["Bleu_clair", (0, 162, 232)], ["Bleu_foncé", (63, 72, 204)],
+                       ["Orange", (255, 128, 0)], ["Vert", (0, 255, 0)], ["Violet", (169, 67, 171)]]
+
     def fonction_principale(self):
 
         while self.game:
 
             if self.ecran_du_debut:
-
                 self.afficher_elements_debut()
                 self.bouttons_debut_click()
 
                 pygame.display.flip()
 
             if self.ecran_scoreboards:
-
                 self.afficher_elements_scoreboards()
                 self.bouttons_retour_click()
 
                 pygame.display.flip()
 
             if self.ecran_choix_style:
-
                 self.afficher_elements_style()
                 self.bouttons_retour_click()
 
@@ -152,6 +152,7 @@ class Jeu:
 
         self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
                            self.noir)
+        self.creer_message(60, "Meilleurs scores", (205, 82, 100, 30), self.blanc, True)
 
         self.afficher_menu_scoreboards()
 
@@ -160,6 +161,29 @@ class Jeu:
         self.ecran.fill(self.noir)
         self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
                            self.noir)
+        self.creer_message(60, "Choisis ton style", (205, 82, 100, 30), self.blanc, True)
+
+        serpent_position = [250, 250]
+        nombre_serpent = 0
+
+        for style in self.styles:
+
+            taille_serpent = 0
+
+            tete = pygame.image.load("Tete_du_serpent_{}.png".format(style[0]))
+            self.ecran.blit(tete, (serpent_position[0], serpent_position[1], self.serpent_corps, self.serpent_corps))
+
+            while taille_serpent < 6:
+
+                pygame.draw.rect(self.ecran, style[1], (serpent_position[0], serpent_position[1], 10, 10))
+                taille_serpent += 1
+
+            serpent_position[0] += 200
+            nombre_serpent += 1
+
+            if nombre_serpent == 3:
+                serpent_position[1] += 200
+                serpent_position[0] = 250
 
     def afficher_elements_jeu(self):
         self.ecran.fill(self.noir)
@@ -293,21 +317,21 @@ class Jeu:
                                self.noir, True)
             self.creer_boutton(50, "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
                                self.noir, True)
-            self.bouton_mort_click()
+            self.boutons_mort_click()
             pygame.display.flip()
 
-    def bouton_mort_click(self):
+    def boutons_mort_click(self):
 
         for evenement in pygame.event.get():
-            
+
             self.gestion_quitter(evenement)
 
-            if self.boutton_click(evenement, self.recommencer()):
+            if self.boutton_click(evenement, self.boutton_recommencer):
 
                 self.recommencer()
 
             elif self.boutton_click(evenement, self.boutton_quitter):
-                
+
                 self.enregistrer_score()
                 sys.exit()
 
@@ -367,8 +391,6 @@ class Jeu:
         scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
         scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
 
-        self.creer_message(60, "Meilleurs scores", (205, 85, 100, 30), self.blanc, True)
-
     def bouttons_retour_click(self):
 
         for evenement in pygame.event.get():
@@ -376,13 +398,12 @@ class Jeu:
             self.gestion_quitter(evenement)
 
             if self.boutton_click(evenement, self.boutton_retour):
-
                 self.ecran_du_debut = True
                 self.ecran_scoreboards = False
                 self.ecran_choix_style = False
 
     def boutton_click(self, evenement, boutton):
-        
+
         if evenement.type == pygame.MOUSEBUTTONDOWN:
             x, y = evenement.pos
 
