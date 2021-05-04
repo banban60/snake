@@ -33,8 +33,6 @@ class Jeu:
         self.pomme = 10
         self.pomme_or_ou_pas = 100
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_Vert.png')
-
         self.image = pygame.image.load('snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (250, 200))
 
@@ -56,6 +54,8 @@ class Jeu:
 
         self.styles = [["Blanc", self.blanc], ["Bleu_clair", (0, 162, 232)], ["Bleu_foncé", (63, 72, 204)],
                        ["Orange", (255, 128, 0)], ["Vert", (0, 255, 0)], ["Violet", (169, 67, 171)]]
+        self.couleur_position = [125, 225]
+        self.serpent_couleur = ["Vert", (0, 255, 0)]
 
     def fonction_principale(self):
 
@@ -69,13 +69,13 @@ class Jeu:
 
             if self.ecran_scoreboards:
                 self.afficher_elements_scoreboards()
-                self.bouttons_retour_click()
+                self.bouttons_scoreboard_click()
 
                 pygame.display.flip()
 
             if self.ecran_choix_style:
                 self.afficher_elements_style()
-                self.bouttons_retour_click()
+                self.boutton_styles_click()
 
                 pygame.display.flip()
 
@@ -163,27 +163,36 @@ class Jeu:
                            self.noir)
         self.creer_message(60, "Choisis ton style", (205, 82, 100, 30), self.blanc, True)
 
-        serpent_position = [250, 250]
+        tete_position = [225, 275]
+        self.couleur_position = [125, 225]
         nombre_serpent = 0
 
         for style in self.styles:
 
             taille_serpent = 0
+            corps_position = tete_position
 
             tete = pygame.image.load("Tete_du_serpent_{}.png".format(style[0]))
-            self.ecran.blit(tete, (serpent_position[0], serpent_position[1], self.serpent_corps, self.serpent_corps))
+            self.ecran.blit(tete, (tete_position[0], tete_position[1], self.serpent_corps, self.serpent_corps))
+            self.creer_message(40, str(style[0]), self.couleur_position, style[1], True)
 
-            while taille_serpent < 6:
+            while taille_serpent < 10:
 
-                pygame.draw.rect(self.ecran, style[1], (serpent_position[0], serpent_position[1], 10, 10))
+                corps_position[0] -= 10
                 taille_serpent += 1
 
-            serpent_position[0] += 200
+                pygame.draw.rect(self.ecran, style[1], (corps_position[0], corps_position[1], 10, 10))
+
+            tete_position[0] += 300
             nombre_serpent += 1
+            self.couleur_position[0] += 200
 
             if nombre_serpent == 3:
-                serpent_position[1] += 200
-                serpent_position[0] = 250
+                tete_position[0] = 225
+                tete_position[1] += 150
+
+                self.couleur_position[0] = 125
+                self.couleur_position[1] += 150
 
     def afficher_elements_jeu(self):
         self.ecran.fill(self.noir)
@@ -200,12 +209,14 @@ class Jeu:
             pygame.draw.rect(self.ecran, (239, 229, 19), (self.pomme_or_position_x, self.pomme_or_position_y,
                                                           self.pomme, self.pomme))
 
-        self.ecran.blit(self.image_tete_du_serpent, (self.serpent_position_x, self.serpent_position_y,
-                                                     self.serpent_corps, self.serpent_corps))
-
         for partie_du_serpent in self.positions_serpent[:-1]:
-            pygame.draw.rect(self.ecran, (0, 255, 0), (partie_du_serpent[0], partie_du_serpent[1],
-                                                       self.serpent_corps, self.serpent_corps))
+            pygame.draw.rect(self.ecran, self.serpent_couleur[1], (partie_du_serpent[0], partie_du_serpent[1],
+                             self.serpent_corps, self.serpent_corps))
+
+        image_tete_du_serpent = pygame.image.load('Tete_du_serpent_{}.png'.format(self.serpent_couleur[0]))
+
+        self.ecran.blit(image_tete_du_serpent, (self.serpent_position_x, self.serpent_position_y,
+                                                self.serpent_corps, self.serpent_corps))
 
     def se_mord(self, tete_serpent):
 
@@ -320,21 +331,6 @@ class Jeu:
             self.boutons_mort_click()
             pygame.display.flip()
 
-    def boutons_mort_click(self):
-
-        for evenement in pygame.event.get():
-
-            self.gestion_quitter(evenement)
-
-            if self.boutton_click(evenement, self.boutton_recommencer):
-
-                self.recommencer()
-
-            elif self.boutton_click(evenement, self.boutton_quitter):
-
-                self.enregistrer_score()
-                sys.exit()
-
     def enregistrer_score(self):
 
         with open("Scores{}.txt".format(self.difficulte), "a+") as file:
@@ -391,17 +387,6 @@ class Jeu:
         scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
         scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
 
-    def bouttons_retour_click(self):
-
-        for evenement in pygame.event.get():
-
-            self.gestion_quitter(evenement)
-
-            if self.boutton_click(evenement, self.boutton_retour):
-                self.ecran_du_debut = True
-                self.ecran_scoreboards = False
-                self.ecran_choix_style = False
-
     def boutton_click(self, evenement, boutton):
 
         if evenement.type == pygame.MOUSEBUTTONDOWN:
@@ -412,6 +397,58 @@ class Jeu:
 
             else:
                 return False
+
+    def bouttons_scoreboard_click(self):
+
+        for evenement in pygame.event.get():
+
+            self.gestion_quitter(evenement)
+
+            if self.boutton_click(evenement, self.boutton_retour):
+                self.ecran_du_debut = True
+                self.ecran_scoreboards = False
+                self.ecran_choix_style = False
+
+    def boutton_styles_click(self):
+
+        for evenement in pygame.event.get():
+
+            self.gestion_quitter(evenement)
+
+            if self.boutton_click(evenement, self.boutton_retour):
+                self.ecran_du_debut = True
+                self.ecran_choix_style = False
+
+            nombre_styles = 0
+            self.couleur_position = [125, 225, 110, 70]
+
+            for style in self.styles:
+
+                if self.boutton_click(evenement, self.couleur_position):
+                    self.serpent_couleur = style
+                    self.ecran_du_debut = True
+                    self.ecran_choix_style = False
+
+                self.couleur_position[0] += 200
+                nombre_styles += 1
+
+                if nombre_styles == 3:
+                    self.couleur_position[0] = 125
+                    self.couleur_position[1] += 150
+    def boutons_mort_click(self):
+
+        for evenement in pygame.event.get():
+
+            self.gestion_quitter(evenement)
+
+            if self.boutton_click(evenement, self.boutton_recommencer):
+
+                self.recommencer()
+
+            elif self.boutton_click(evenement, self.boutton_quitter):
+
+                self.enregistrer_score()
+                sys.exit()
 
 
 if __name__ == '__main__':
