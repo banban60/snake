@@ -52,10 +52,11 @@ class Jeu:
         self.blanc = (255, 255, 255)
         self.noir = (0, 0, 0)
 
-        self.styles = [["Blanc", self.blanc], ["Bleu_clair", (0, 162, 232)], ["Bleu_foncé", (63, 72, 204)],
-                       ["Orange", (255, 128, 0)], ["Vert", (0, 255, 0)], ["Violet", (169, 67, 171)]]
+        self.styles = [["Blanc", self.blanc, self.noir], ["Bleu_clair", (0, 162, 232)], ["Bleu_foncé", (63, 72, 204)],
+                       ["Orange", (255, 128, 0)], ["Vert", (0, 255, 0), (0, 191, 0)], ["Violet", (169, 67, 171)]]
         self.couleur_position = [125, 225]
-        self.serpent_couleur = ["Vert", (0, 255, 0)]
+        self.serpent_couleur = ["Vert", (0, 191, 0)]
+        self.serpent_couleur[-1] = (0, 191, 0)
 
     def fonction_principale(self):
 
@@ -133,34 +134,79 @@ class Jeu:
         self.ecran.fill(self.noir)
 
         self.ecran.blit(self.image_titre, (270, 25, 100, 50))
-        self.creer_message(25, "Le but du jeu est que le serpent se développe",
-                           (85, 200, 200, 5), self.blanc)
+        self.creer_message(25, "Le but du jeu est que le serpent se développe", (205, 200, 200, 5),
+                           self.serpent_couleur[1])
         self.creer_message(25, "Pour cela, il a besoin de pommes, mangez-en autant que possible !",
-                           (10, 220, 200, 5), self.blanc)
-        self.creer_message(40, "Choissisez la difficulté du jeu",
-                           (160, 350, 200, 5), self.blanc, True)
-        self.creer_boutton(50, "Facile", self.boutton_facile, (100, 433), self.blanc, self.noir, True)
-        self.creer_boutton(50, "Moyen", self.boutton_moyen, (340, 433), self.blanc, self.noir, True)
-        self.creer_boutton(50, "Difficile", self.boutton_difficile, (565, 433), self.blanc, self.noir, True)
+                           (115, 220, 200, 5), self.serpent_couleur[1])
+        self.creer_message(40, "Choissisez la difficulté du jeu", (160, 350, 200, 5), self.serpent_couleur[1], True)
+        self.creer_boutton(50, "Facile", self.boutton_facile, (100, 433), self.blanc, self.serpent_couleur[-1], True)
+        self.creer_boutton(50, "Moyen", self.boutton_moyen, (340, 433), self.blanc, self.serpent_couleur[-1], True)
+        self.creer_boutton(50, "Difficile", self.boutton_difficile, (565, 433), self.blanc, self.serpent_couleur[-1],
+                           True)
 
-        self.creer_boutton(35, "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc, self.noir)
-        self.creer_boutton(35, "Choix du style", self.boutton_style, (583, 89), self.blanc, self.noir)
+        self.creer_boutton(35, "Meilleurs scores", self.boutton_scoreboard, (33, 89), self.blanc,
+                           self.serpent_couleur[-1])
+        self.creer_boutton(35, "Choix du style", self.boutton_style, (583, 89), self.blanc, self.serpent_couleur[-1])
 
     def afficher_elements_scoreboards(self):
 
         self.ecran.fill(self.noir)
 
-        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
-                           self.noir)
-        self.creer_message(60, "Meilleurs scores", (205, 82, 100, 30), self.blanc, True)
+        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc, self.serpent_couleur[-1])
+        self.creer_message(60, "Meilleurs scores", (205, 82, 100, 30), self.serpent_couleur[1], True)
 
-        self.afficher_menu_scoreboards()
+        def creer_scoreboard(difficulte, cases_gauche, cases_centre, nombres_gauche, scores_position):
+
+            with open("Scores{}.txt".format(difficulte), "r+") as file:
+                scores_liste = file.readlines()
+                scores_liste = [int(score.strip()) for score in scores_liste]
+                scores_liste.sort()
+                scores_liste.reverse()
+                del scores_liste[10:]
+                file.close()
+
+            if difficulte == "Facile":
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 43, cases_centre[1] + 1), self.blanc)
+
+            elif difficulte == "Moyen":
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 41, cases_centre[1] + 1), self.blanc)
+
+            elif difficulte == "Difficile":
+                self.creer_message(25, str(difficulte), (cases_centre[0] + 35, cases_centre[1] + 1), self.blanc)
+
+            nombre_cases = 0
+
+            while nombre_cases <= 10:
+                pygame.draw.rect(self.ecran, self.blanc, cases_gauche, 2, 5)
+                pygame.draw.rect(self.ecran, self.blanc, cases_centre, 2, 5)
+
+                if nombre_cases == 10:
+                    self.creer_message(25, str(nombre_cases), (cases_gauche[0], cases_gauche[1] + 2,
+                                                               cases_gauche[2], cases_gauche[3]), self.blanc)
+
+                elif nombre_cases == 0:
+                    pass
+
+                else:
+                    self.creer_message(25, str(nombre_cases), nombres_gauche, self.blanc)
+
+                nombre_cases += 1
+                cases_gauche[1] += cases_gauche[3]
+                cases_centre[1] += cases_centre[3]
+                nombres_gauche[1] += nombres_gauche[3]
+
+            for score in scores_liste:
+                self.creer_message(25, str(score), scores_position, self.blanc)
+                scores_position[1] += 20
+
+        creer_scoreboard("Facile", [110, 200, 20, 20], [110, 200, 120, 20], [115, 202, 20, 20], [168, 222])
+        creer_scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
+        creer_scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
 
     def afficher_elements_style(self):
 
         self.ecran.fill(self.noir)
-        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc,
-                           self.noir)
+        self.creer_boutton(35, "Retour", self.boutton_retour, (30, 89), self.blanc, self.serpent_couleur[-1])
         self.creer_message(60, "Choisis ton style", (205, 82, 100, 30), self.blanc, True)
 
         tete_position = [225, 275]
@@ -197,8 +243,8 @@ class Jeu:
     def afficher_elements_jeu(self):
         self.ecran.fill(self.noir)
 
-        self.creer_message(40, "Snake Game", (320, 10, 100, 50), (20, 220, 20), True)
-        self.creer_message(40, str(self.score), (410, 50, 50, 50), (20, 220, 20), True)
+        self.creer_message(40, "Snake Game", (320, 10, 100, 50), self.serpent_couleur[-1], True)
+        self.creer_message(40, str(self.score), (410, 50, 50, 50), self.serpent_couleur[-1], True)
 
         pygame.draw.rect(self.ecran, self.blanc, (100, 100, 600, 500), 3)
 
@@ -256,7 +302,7 @@ class Jeu:
                 self.ecran_du_debut = False
                 self.jeu_en_cours = True
 
-                self.clock_tick = 25
+                self.clock_tick = 20
                 self.difficulte = "Moyen"
 
             elif self.boutton_click(evenement, self.boutton_difficile):
@@ -296,7 +342,6 @@ class Jeu:
 
         if self.pomme_position_y == self.serpent_position_y and self.pomme_position_x == self.serpent_position_x:
             self.pomme_or_ou_pas = random.randrange(0, 100, 1)
-            print(self.pomme_or_ou_pas)
 
             self.pomme_position_x = random.randrange(120, 680, 10)
             self.pomme_position_y = random.randrange(120, 580, 10)
@@ -324,9 +369,9 @@ class Jeu:
 
         while self.jeu_en_cours:
             self.ecran.fill(self.noir)
-            self.creer_boutton(50, "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), (20, 150, 20),
+            self.creer_boutton(50, "Recommencer", (257, 180, 285, 50), (263, 188, 200, 50), self.serpent_couleur[-1],
                                self.noir, True)
-            self.creer_boutton(50, "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), (20, 150, 20),
+            self.creer_boutton(50, "Quitter", (257, 370, 285, 50), (325, 378, 200, 50), self.serpent_couleur[-1],
                                self.noir, True)
             self.boutons_mort_click()
             pygame.display.flip()
@@ -336,56 +381,6 @@ class Jeu:
         with open("Scores{}.txt".format(self.difficulte), "a+") as file:
             file.write(str(self.score) + "\n")
             file.close()
-
-    def afficher_menu_scoreboards(self):
-
-        def scoreboard(difficulte, cases_gauche, cases_centre, nombres_gauche, scores_position):
-
-            with open("Scores{}.txt".format(difficulte), "r+") as file:
-                scores_liste = file.readlines()
-                scores_liste = [int(score.strip()) for score in scores_liste]
-                scores_liste.sort()
-                scores_liste.reverse()
-                del scores_liste[10:]
-                file.close()
-
-            if difficulte == "Facile":
-                self.creer_message(25, str(difficulte), (cases_centre[0] + 43, cases_centre[1] + 1), self.blanc)
-
-            elif difficulte == "Moyen":
-                self.creer_message(25, str(difficulte), (cases_centre[0] + 41, cases_centre[1] + 1), self.blanc)
-
-            elif difficulte == "Difficile":
-                self.creer_message(25, str(difficulte), (cases_centre[0] + 35, cases_centre[1] + 1), self.blanc)
-
-            nombre_cases = 0
-
-            while nombre_cases <= 10:
-                pygame.draw.rect(self.ecran, self.blanc, cases_gauche, 2, 5)
-                pygame.draw.rect(self.ecran, self.blanc, cases_centre, 2, 5)
-
-                if nombre_cases == 10:
-                    self.creer_message(25, str(nombre_cases), (cases_gauche[0], cases_gauche[1] + 2,
-                                                               cases_gauche[2], cases_gauche[3]), self.blanc)
-
-                elif nombre_cases == 0:
-                    pass
-
-                else:
-                    self.creer_message(25, str(nombre_cases), nombres_gauche, self.blanc)
-
-                nombre_cases += 1
-                cases_gauche[1] += cases_gauche[3]
-                cases_centre[1] += cases_centre[3]
-                nombres_gauche[1] += nombres_gauche[3]
-
-            for score in scores_liste:
-                self.creer_message(25, str(score), scores_position, self.blanc)
-                scores_position[1] += 20
-
-        scoreboard("Facile", [110, 200, 20, 20], [110, 200, 120, 20], [115, 202, 20, 20], [168, 222])
-        scoreboard("Moyen", [340, 200, 20, 20], [340, 200, 120, 20], [345, 202, 20, 20], [398, 222])
-        scoreboard("Difficile", [570, 200, 20, 20], [570, 200, 120, 20], [575, 202, 20, 20], [628, 222])
 
     def boutton_click(self, evenement, boutton):
 
@@ -435,6 +430,7 @@ class Jeu:
                 if nombre_styles == 3:
                     self.couleur_position[0] = 125
                     self.couleur_position[1] += 150
+
     def boutons_mort_click(self):
 
         for evenement in pygame.event.get():
