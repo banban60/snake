@@ -30,9 +30,9 @@ class Jeu:
 
         self.ecran_du_debut = True
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_Vert.png')
+        self.image_tete_du_serpent = pygame.image.load('assets/Tete_du_serpent_Vert.png')
 
-        self.image = pygame.image.load('snake-game.jpg')
+        self.image = pygame.image.load('assets/snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (250, 200))
 
         self.score = 0
@@ -83,6 +83,7 @@ class Jeu:
                     self.positions_serpent.pop(0)
 
                 self.clock.tick(self.clock_tick)
+                print(self.positions_serpent)
                 self.afficher_les_elements()
                 pygame.display.flip()
 
@@ -100,19 +101,28 @@ class Jeu:
 
             if evenement.type == pygame.KEYDOWN:
 
-                if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
+                if (
+                    evenement.key == pygame.K_RIGHT
+                    and self.serpent_direction_x != -10
+                ):
                     self.serpent_direction_x = 10
                     self.serpent_direction_y = 0
 
-                elif evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
+                elif (
+                    evenement.key == pygame.K_LEFT
+                    and self.serpent_direction_x != 10
+                ):
                     self.serpent_direction_x = -10
                     self.serpent_direction_y = 0
 
-                elif evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
+                elif (
+                    evenement.key == pygame.K_DOWN
+                    and self.serpent_direction_y != -10
+                ):
                     self.serpent_direction_y = 10
                     self.serpent_direction_x = 0
 
-                elif evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
+                elif evenement.key == pygame.K_UP and self.serpent_direction_y != 10:
                     self.serpent_direction_y = -10
                     self.serpent_direction_x = 0
 
@@ -151,10 +161,10 @@ class Jeu:
     def creer_message(self, font, message, message_rectangle, couleur):
 
         if font == 'petite':
-            font = pygame.font.SysFont('Lato', 25, False)
+            font = pygame.font.SysFont('Lato', 25)
 
         elif font == 'moyenne':
-            font = pygame.font.SysFont('Lato', 30, False)
+            font = pygame.font.SysFont('Lato', 30)
 
         elif font == 'grande':
             font = pygame.font.SysFont('Lato', 40, True)
@@ -290,28 +300,25 @@ class Jeu:
             del scores_liste[10:]
             file.close()
 
-        nombre_cases = 0
         tableau_cases_gauche = [600, 50, 20, 20]
         tableau_cases_centre = [600, 50, 120, 20]
         nombres_gauche = [605, 52, 20, 20]
 
-        while nombre_cases <= 10:
+        for nombre_cases in range(11):
             pygame.draw.rect(self.ecran, self.blanc, tableau_cases_gauche, 2, 5)
             pygame.draw.rect(self.ecran, self.blanc, tableau_cases_centre, 2, 5)
 
-            if nombre_cases == 10:
+            if nombre_cases == 0:
+                pass
+            elif nombre_cases == 10:
                 self.creer_message('petite', str(nombre_cases), (tableau_cases_gauche[0],
                                                                  tableau_cases_gauche[1] + 2,
                                                                  tableau_cases_gauche[2], tableau_cases_gauche[3]),
                                    self.blanc)
 
-            elif nombre_cases == 0:
-                pass
-
             else:
                 self.creer_message('petite', str(nombre_cases), nombres_gauche, self.blanc)
 
-            nombre_cases += 1
             tableau_cases_gauche[1] += tableau_cases_gauche[3]
             tableau_cases_centre[1] += tableau_cases_centre[3]
             nombres_gauche[1] += nombres_gauche[3]

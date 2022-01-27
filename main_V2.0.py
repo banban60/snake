@@ -33,7 +33,7 @@ class Jeu:
         self.pomme = 10
         self.pomme_or_ou_pas = 100
 
-        self.image = pygame.image.load('snake-game.jpg')
+        self.image = pygame.image.load('assets/snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (250, 200))
 
         self.score = 0
@@ -110,19 +110,28 @@ class Jeu:
 
             if evenement.type == pygame.KEYDOWN:
 
-                if evenement.key == pygame.K_RIGHT and not self.serpent_direction_x == -10:
+                if (
+                    evenement.key == pygame.K_RIGHT
+                    and self.serpent_direction_x != -10
+                ):
                     self.serpent_direction_x = 10
                     self.serpent_direction_y = 0
 
-                elif evenement.key == pygame.K_LEFT and not self.serpent_direction_x == 10:
+                elif (
+                    evenement.key == pygame.K_LEFT
+                    and self.serpent_direction_x != 10
+                ):
                     self.serpent_direction_x = -10
                     self.serpent_direction_y = 0
 
-                elif evenement.key == pygame.K_DOWN and not self.serpent_direction_y == -10:
+                elif (
+                    evenement.key == pygame.K_DOWN
+                    and self.serpent_direction_y != -10
+                ):
                     self.serpent_direction_y = 10
                     self.serpent_direction_x = 0
 
-                elif evenement.key == pygame.K_UP and not self.serpent_direction_y == 10:
+                elif evenement.key == pygame.K_UP and self.serpent_direction_y != 10:
                     self.serpent_direction_y = -10
                     self.serpent_direction_x = 0
 
@@ -211,26 +220,21 @@ class Jeu:
 
         tete_position = [225, 275]
         self.couleur_position = [125, 225]
-        nombre_serpent = 0
 
-        for style in self.styles:
+        for nombre_serpent, style in enumerate(self.styles, start=1):
 
-            taille_serpent = 0
             corps_position = tete_position
 
-            tete = pygame.image.load("Tete_du_serpent_{}.png".format(style[0]))
+            tete = pygame.image.load("assets/Tete_du_serpent_{}.png".format(style[0]))
             self.ecran.blit(tete, (tete_position[0], tete_position[1], self.serpent_corps, self.serpent_corps))
             self.creer_message(40, str(style[0]), self.couleur_position, style[1], True)
 
-            while taille_serpent < 10:
+            for _ in range(10):
 
                 corps_position[0] -= 10
-                taille_serpent += 1
-
                 pygame.draw.rect(self.ecran, style[1], (corps_position[0], corps_position[1], 10, 10))
 
             tete_position[0] += 300
-            nombre_serpent += 1
             self.couleur_position[0] += 200
 
             if nombre_serpent == 3:
@@ -259,7 +263,7 @@ class Jeu:
             pygame.draw.rect(self.ecran, self.serpent_couleur[1], (partie_du_serpent[0], partie_du_serpent[1],
                              self.serpent_corps, self.serpent_corps))
 
-        image_tete_du_serpent = pygame.image.load('Tete_du_serpent_{}.png'.format(self.serpent_couleur[0]))
+        image_tete_du_serpent = pygame.image.load('assets/Tete_du_serpent_{}.png'.format(self.serpent_couleur[0]))
 
         self.ecran.blit(image_tete_du_serpent, (self.serpent_position_x, self.serpent_position_y,
                                                 self.serpent_corps, self.serpent_corps))
@@ -291,28 +295,13 @@ class Jeu:
 
             if self.boutton_click(evenement, self.boutton_facile):
 
-                self.ecran_du_debut = False
-                self.jeu_en_cours = True
-
-                self.clock_tick = 15
-                self.difficulte = "Facile"
-
+                self.mettre_difficulte(15, "Facile")
             elif self.boutton_click(evenement, self.boutton_moyen):
 
-                self.ecran_du_debut = False
-                self.jeu_en_cours = True
-
-                self.clock_tick = 20
-                self.difficulte = "Moyen"
-
+                self.mettre_difficulte(20, "Moyen")
             elif self.boutton_click(evenement, self.boutton_difficile):
 
-                self.ecran_du_debut = False
-                self.jeu_en_cours = True
-
-                self.clock_tick = 35
-                self.difficulte = "Difficile"
-
+                self.mettre_difficulte(35, "Difficile")
             elif self.boutton_click(evenement, self.boutton_scoreboard):
 
                 self.ecran_du_debut = False
@@ -322,6 +311,13 @@ class Jeu:
 
                 self.ecran_du_debut = False
                 self.ecran_choix_style = True
+
+    def mettre_difficulte(self, tick, difficulte):
+        self.ecran_du_debut = False
+        self.jeu_en_cours = True
+
+        self.clock_tick = tick
+        self.difficulte = difficulte
 
     @staticmethod
     def gestion_quitter(evenement):
@@ -382,16 +378,16 @@ class Jeu:
             file.write(str(self.score) + "\n")
             file.close()
 
-    def boutton_click(self, evenement, boutton):
+    @staticmethod
+    def boutton_click(evenement, boutton):
 
         if evenement.type == pygame.MOUSEBUTTONDOWN:
             x, y = evenement.pos
 
-            if boutton[0] <= x <= boutton[0] + boutton[2] and boutton[1] <= y <= boutton[1] + boutton[3]:
-                return True
-
-            else:
-                return False
+            return (
+                boutton[0] <= x <= boutton[0] + boutton[2]
+                and boutton[1] <= y <= boutton[1] + boutton[3]
+            )
 
     def bouttons_scoreboard_click(self):
 
@@ -414,10 +410,9 @@ class Jeu:
                 self.ecran_du_debut = True
                 self.ecran_choix_style = False
 
-            nombre_styles = 0
             self.couleur_position = [125, 225, 110, 70]
 
-            for style in self.styles:
+            for nombre_styles, style in enumerate(self.styles, start=1):
 
                 if self.boutton_click(evenement, self.couleur_position):
                     self.serpent_couleur = style
@@ -425,8 +420,6 @@ class Jeu:
                     self.ecran_choix_style = False
 
                 self.couleur_position[0] += 200
-                nombre_styles += 1
-
                 if nombre_styles == 3:
                     self.couleur_position[0] = 125
                     self.couleur_position[1] += 150

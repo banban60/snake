@@ -24,9 +24,9 @@ class Jeu:
 
         self.ecran_du_debut = True
 
-        self.image_tete_du_serpent = pygame.image.load('Tete_du_serpent_Vert.png')
+        self.image_tete_du_serpent = pygame.image.load('assets/Tete_du_serpent_Vert.png')
 
-        self.image = pygame.image.load('snake-game.jpg')
+        self.image = pygame.image.load('assets/snake-game.jpg')
         self.image_titre = pygame.transform.scale(self.image, (200, 100))
 
         self.score = 0
@@ -40,10 +40,12 @@ class Jeu:
                 if evenement.type == pygame.QUIT:
                     sys.exit()
 
-                if evenement.type == pygame.KEYDOWN:
-                    if evenement.key == pygame.K_RETURN:
+                if (
+                    evenement.type == pygame.KEYDOWN
+                    and evenement.key == pygame.K_RETURN
+                ):
 
-                        self.ecran_du_debut = False
+                    self.ecran_du_debut = False
 
                 self.ecran.fill((0, 0, 0))
 
